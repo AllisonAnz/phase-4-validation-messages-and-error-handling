@@ -5,11 +5,14 @@ class MoviesController < ApplicationController
     movies = Movie.all
     render json: movies
   end
-
+ 
+  # Update to check vilidity of our model
   def create
-    movie = Movie.create(movie_params)
+    movie = Movie.create!(movie_params)
     render json: movie, status: :created
-  end
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+  end 
 
   private
 
